@@ -10,6 +10,7 @@ from map import Map
 from actor import Actor
 from camera import Camera
 from images import load_image
+from input import Input
 
 # Constantes
 WIDTH = 640
@@ -25,8 +26,7 @@ HEIGHT = 480
 # Funciones
 # ---------------------------------------------------------------------
 
-def salir():
-	keys = pygame.key.get_pressed()
+def salir(keys):
 	for eventos in pygame.event.get():
 		if eventos.type == QUIT:
 			sys.exit(0)
@@ -46,12 +46,13 @@ def main():
 	map_loaded = Map("pruebas.tmx")
 	heroe = Actor(map_loaded)
 	camara = Camera(map_loaded, heroe)
-
+	inp = Input()
 	while True:
 		time = clock.tick(40)
-		salir()
+		inp.update()
+		salir(inp.getKeyList())
 		
-		id = heroe.mover(map_loaded)
+		id = heroe.mover(map_loaded, inp.getKeyList())
 		heroe.update(id)
 		camara.update(screen, map_loaded, heroe)
 		#screen.blit(rejilla, (0, 0))

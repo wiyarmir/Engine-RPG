@@ -39,8 +39,7 @@ class Actor:
 		self.graph = 0
 		self.wait = 0
 	
-	def mover(self, map):
-		keys = pygame.key.get_pressed()
+	def mover(self, map, keys):
 		if self.unlock:
 			if keys[K_LEFT]:
 				if map.tiles[self.pos[0]][self.pos[1]].lock[3] and map.tiles[self.pos[0]][self.pos[1]-1].lock[1]:
