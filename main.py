@@ -41,20 +41,20 @@ def main():
 	pygame.display.set_caption("Engine RPG")
 
 	clock = pygame.time.Clock()
-	rejilla = load_image('resources/graphics/rejilla.png', True)
+	#rejilla = load_image('resources/graphics/rejilla.png', True)
 	
 	map_loaded = Map("pruebas.tmx")
 	heroe = Actor(map_loaded)
-	camara = Camera(map_loaded)
+	camara = Camera(map_loaded, heroe)
 
 	while True:
 		time = clock.tick(40)
 		salir()
 		
-		id = heroe.mover()
+		id = heroe.mover(map_loaded)
 		heroe.update(id)
-		camara.update(screen, heroe)
-		screen.blit(rejilla, (0, 0))
+		camara.update(screen, map_loaded, heroe)
+		#screen.blit(rejilla, (0, 0))
 		
 		pygame.display.flip()
 	return 0
