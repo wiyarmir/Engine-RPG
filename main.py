@@ -52,9 +52,10 @@ def main():
 		inp.update()
 		salir(inp.getKeyList())
 		
-		id = heroe.mover(map_loaded, inp.getKeyList())
+		id = heroe.mover(map_loaded, inp)
 		heroe.update(id)
 		camara.update(screen, map_loaded, heroe)
+		camara.show_fps(screen, clock.get_fps())
 		#screen.blit(rejilla, (0, 0))
 		
 		pygame.display.flip()

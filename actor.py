@@ -15,6 +15,9 @@ from images import load_image
 # ---------------------------------------------------------------------
 
 class Actor:
+	'''
+	
+	'''
 	def __init__(self, map):
 		# Buscamos el evento player.
 		for i in range(len(events)):
@@ -39,10 +42,27 @@ class Actor:
 		self.graph = 0
 		self.wait = 0
 	
-	def mover(self, map, keys):
+	def canMove(self, map, dir):
+		'''
+		Hace los calculos de si se puede mover segun la direccion
+		'''
+		return {
+		'L' : map.tiles[self.pos[0]][self.pos[1]].lock[3] and map.tiles[self.pos[0]][self.pos[1]-1].lock[1],
+		'R' : map.tiles[self.pos[0]][self.pos[1]].lock[1] and map.tiles[self.pos[0]][self.pos[1]+1].lock[3],
+		'U' : map.tiles[self.pos[0]][self.pos[1]].lock[0] and map.tiles[self.pos[0]-1][self.pos[1]].lock[2],
+		'D' : map.tiles[self.pos[0]][self.pos[1]].lock[2] and map.tiles[self.pos[0]+1][self.pos[1]].lock[0]
+		}[dir]
+	
+	def mover(self, map, input):
+		'''
+		Verifica si se puede mover y actualiza los atributos en consecuencia
+		Parametros:
+			map : 
+			input : Instancia actual de la clase Input (input.py)
+		'''
 		if self.unlock:
-			if keys[K_LEFT]:
-				if map.tiles[self.pos[0]][self.pos[1]].lock[3] and map.tiles[self.pos[0]][self.pos[1]-1].lock[1]:
+			if input.isPressed(K_LEFT):
+				if self.canMove(map, 'L'):
 					self.count = 8
 					self.unlock = 0
 					self.mov = 1
@@ -50,8 +70,8 @@ class Actor:
 					return 1
 				else:
 					self.image = self.chara[1][0]
-			elif keys[K_RIGHT]:
-				if map.tiles[self.pos[0]][self.pos[1]].lock[1] and map.tiles[self.pos[0]][self.pos[1]+1].lock[3]:
+			elif input.isPressed(K_RIGHT):
+				if self.canMove(map, 'R'):
 					self.count = 8
 					self.unlock = 0
 					self.mov = 2
@@ -59,8 +79,8 @@ class Actor:
 					return 2
 				else:
 					self.image = self.chara[2][0]
-			elif keys[K_UP]:
-				if map.tiles[self.pos[0]][self.pos[1]].lock[0] and map.tiles[self.pos[0]-1][self.pos[1]].lock[2]:
+			elif input.isPressed(K_UP):
+				if self.canMove(map, 'U'):
 					self.count = 8
 					self.unlock = 0
 					self.mov = 3
@@ -68,8 +88,8 @@ class Actor:
 					return 3
 				else:
 					self.image = self.chara[3][0]
-			elif keys[K_DOWN]:
-				if map.tiles[self.pos[0]][self.pos[1]].lock[2] and map.tiles[self.pos[0]+1][self.pos[1]].lock[0]:
+			elif input.isPressed(K_DOWN):
+				if self.canMove(map, 'D'):
 					self.count = 8
 					self.unlock = 0
 					self.mov = 0
@@ -78,8 +98,13 @@ class Actor:
 				else:
 					self.image = self.chara[0][0]
 		return -1
-	
+		
 	def update(self, id):
+		'''
+		Mueve el personaje
+		Parámetros:
+			id : Direccion
+		'''
 		# Si no esta mirando para la direccion a caminar, cambiala!
 		if self.look != id and id != -1:
 			self.image = self.chara[id][0]
@@ -102,10 +127,8 @@ class Actor:
 				self.image = self.chara[self.mov][0]
 			self.wait -= 1
 		if self.count == 0 and self.unlock == 0:
-			if self.graph < 3:
-				self.graph += 1
-			else:
-				self.graph = 0
+			self.graph +=1
+			self.graph %= 4
 			self.image = self.chara[self.mov][self.graph]
 			self.unlock = 1
 			self.wait = 4
@@ -119,23 +142,19 @@ class Actor:
 # Funciones
 # ---------------------------------------------------------------------
 
-# Corta un chara en las fil y col indicadas. Array Bidimensional.
 def cut_charaset(ruta, fil, col):
+	'''
+	Corta un chara en las fil y col indicadas. Array Bidimensional.
+	'''
 	image = load_image(ruta, True)
-	rect = image.get_rect()
-	w = rect.w / col
-	h = rect.h / fil
-	sprite = range(fil)
-	for i in range(fil):
-		sprite[i] = range(col)
-
-	for f in range(fil):
-		for c in range(col):
-			sprite[f][c] = image.subsurface((rect.left, rect.top, w, h))
-			rect.left += w
-		rect.top += h
-		rect.left = 0
-
+	w = image.get_rect().w / col
+	h = image.get_rect().h / fil
+	sprite = []
+	for f in xrange(0, fil * h, h):
+		subspr = []
+		for c in xrange(0, col * w, w):
+			subspr.append(image.subsurface((c, f, w, h)))
+		sprite.append(subspr)
 	return sprite
 
 # ---------------------------------------------------------------------

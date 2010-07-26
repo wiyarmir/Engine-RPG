@@ -3,6 +3,7 @@
 
 # Módulos
 import copy
+import pygame
 
 from constants import *
 
@@ -85,13 +86,22 @@ class Camera:
 						if map.tiles[f][c].images[i]:
 							screen.blit(map.tiles[f][c].images[i], self.plot(map, f, c))
 
-
+	def show_fps(self, screen, fps):
+		ifps, ifps_r = texto(str(fps), 0, 0)
+		screen.blit(ifps, ifps_r)
+		
 # ---------------------------------------------------------------------
 
 # Funciones
 # ---------------------------------------------------------------------
 
-
+def texto(texto, posx, posy, color=(255, 255, 255)):
+	fuente = pygame.font.Font("resources/graphics/DroidSans.ttf", 18)
+	salida = pygame.font.Font.render(fuente, texto, 1, color)
+	salida_rect = salida.get_rect()
+	salida_rect.centerx = posx + salida_rect.w / 2
+	salida_rect.centery = posy + salida_rect.h / 2
+	return salida, salida_rect
 
 # ---------------------------------------------------------------------
 
