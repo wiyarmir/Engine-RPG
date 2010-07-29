@@ -1,9 +1,8 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 # Módulos
-
-import sys, pygame
+import pygame
 from pygame.locals import *
 
 # Constantes
@@ -15,11 +14,14 @@ from pygame.locals import *
 class Input:
 	def __init__(self):
 		self.keys = ()
+
 	def update(self):
 		self.keys = pygame.key.get_pressed()
-	def isPressed(self, k):
+
+	def is_pressed(self, k):
 		return self.keys[k]
-	def getKeyList(self):
+	
+	def get_key_list(self):
 		return self.keys
 
 # ---------------------------------------------------------------------
