@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 
 # Módulos
-import sys, pygame
+import sys
+import pygame
 from pygame.locals import *
 
 from constants import *
 from map import Map
 from actor import Actor
 from camera import Camera
-from images import load_image
 from input import Input
 
 # Constantes
@@ -21,18 +21,21 @@ HEIGHT = 480
 # Clases
 # ---------------------------------------------------------------------
 
+
+
 # ---------------------------------------------------------------------
 
 # Funciones
 # ---------------------------------------------------------------------
 
 def salir(keys):
+	"Funcion para cerrar el engine."
 	for eventos in pygame.event.get():
 		if eventos.type == QUIT:
 			sys.exit(0)
-		if keys[K_ESCAPE]:
-			sys.exit(0)
-
+	if keys[K_ESCAPE]:
+		sys.exit(0)
+		
 # ---------------------------------------------------------------------
 
 def main():
@@ -47,10 +50,11 @@ def main():
 	heroe = Actor(map_loaded)
 	camara = Camera(map_loaded, heroe)
 	inp = Input()
+	
 	while True:
 		time = clock.tick(40)
 		inp.update()
-		salir(inp.getKeyList())
+		salir(inp.get_key_list())
 		
 		id = heroe.mover(map_loaded, inp)
 		heroe.update(id)
